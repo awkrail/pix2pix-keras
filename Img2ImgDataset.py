@@ -33,6 +33,7 @@ class FlightDataset(object):
     
     @staticmethod
     def check_img_path_in_paths(i, in_path, out_path):
-        if not "image_%04d.jpg" in os.listdir(in_path) and not "image_%04d.jpg" in os.listdir(out_path):
+        if not "image_%04d.jpg"%i in os.listdir(in_path) and \
+            not "image_%04d.jpg"%i in os.listdir(out_path):
             return True
         return False
