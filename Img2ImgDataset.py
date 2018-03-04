@@ -13,20 +13,22 @@ class FlightDataset(object):
             self.out_array => output dataset
         """
         print("loading dataset...")
-        self.in_array = np.zeros((data_range[1] - data_range[0], 224, 224, 1))        
-        self.out_array = np.zeros((data_range[1] - data_range[0], 224, 224, 3))
+        self.in_array = np.zeros((data_range[1], 224, 224, 1))        
+        self.out_array = np.zeros((data_range[1], 224, 224, 3))
 
         for i in range(data_range[0], data_range[1]):
             if self.check_img_path_in_paths(i, input_path, output_path):
                 continue
-            label = Image.open(input_path+"image_%04d.jpg"%i)
+            label = Image.open(input_path+"image_%04d.jpg"%i).convert("L")
             img = Image.open(output_path+"image_%04d.jpg"%i)
             # resize
             resized_img = img.resize((224, 224), Image.NEAREST)
             resized_label = label.resize((224, 224), Image.NEAREST)
+            # import ipdb; ipdb.set_trace()
 
             resized_img = np.asarray(resized_img).astype("f") / 128.0 - 1.0
             resized_label = np.asarray(resized_label)
+            print("image_%04d.jpg"%i)
             resized_label = resized_label.reshape(224, 224, 1)
             self.in_array[i] = resized_label
             self.out_array[i] = resized_img
