@@ -4,6 +4,31 @@ import os
 import glob
 
 
+class AugmentFlightDataset(object):
+    def __init__(self, input_paths, output_paths):
+        # input_paths = sorted(os.listdir(input_path))
+        # output_paths = sorted(os.listdir(output_path))
+        self.in_array = np.zeros((len(input_paths), 224, 224, 1))
+        self.out_array = np.zeros((len(output_paths), 224, 224, 3))
+        i = 0
+
+        for ipath, opath in zip(input_paths, output_paths):
+            img = Image.open(opath).convert("RGB")
+            label = Image.open(ipath).convert("L")
+
+            resized_img = img.resize((224, 224), Image.NEAREST)
+            resized_label = label.resize((224, 224), Image.NEAREST)
+
+            resized_img = np.asarray(resized_img).astype("f") / 128.0 - 1.0
+            resized_label = np.asarray(resized_label)
+            resized_label = resized_label.reshape(224, 224, 1)
+
+            self.in_array[i] = resized_label
+            self.out_array[i] = resized_img
+
+            i+= 1
+
+
 class FlightDataset(object):
     def __init__(self, input_path, output_path, data_range):
         """
@@ -29,7 +54,6 @@ class FlightDataset(object):
 
             resized_img = np.asarray(resized_img).astype("f") / 128.0 - 1.0
             resized_label = np.asarray(resized_label)
-            print("image_%04d.jpg"%i)
             resized_label = resized_label.reshape(224, 224, 1)
             self.in_array[i] = resized_label
             self.out_array[i] = resized_img
