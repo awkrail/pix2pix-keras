@@ -25,7 +25,7 @@ def main():
     model.compile(optimizer=adam, loss="mean_squared_error")
 
     # checkpoint
-    checkpoint = ModelCheckpoint(filepath="checkpoints/", save_best_only=False)
+    checkpoint = ModelCheckpoint(filepath="checkpoints/model_weights_{epoch:02d}.h5"+ , save_best_only=False)
 
     # start training
     model.fit(X_train, y_train, batch_size=5, epochs=20, verbose=1,
