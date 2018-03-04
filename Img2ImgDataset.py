@@ -1,6 +1,7 @@
 from PIL import Image
 import numpy as np
 import os
+import glob
 
 
 class FlightDataset(object):
@@ -39,3 +40,20 @@ class FlightDataset(object):
             not "image_%04d.jpg"%i in os.listdir(out_path):
             return True
         return False
+
+
+class FlightTestDataset(object):
+    def __init__(self, test_path):
+        print("loading dataset...")
+        self.test_paths = sorted(os.listdir(test_path))
+        self.test_dataset = []
+
+        # (f_path, np_array)
+        for tpath in self.test_paths:
+            label = Image.open(test_path + tpath).convert("L")
+            np_label = np.asarray(label)
+            np_label = np_label.reshape(1, 224, 224, 1)
+            self.test_dataset.append((tpath, np_label))
+
+
+
